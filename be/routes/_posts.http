@@ -1,0 +1,33 @@
+GET http://localhost:5050/posts
+
+#####
+
+POST http://localhost:5050/posts/create HTTP/1.1
+Content-Type: application/json
+
+{
+    "category": "ALTRAPROVA",
+    "title": "ALTRO TITOLO",
+    "cover": "http://miaimmagine.jpg",
+    "readTime": {
+        "value": 6,
+        "unit": "minuti"
+    },
+    "author":"64bed5613120be802dc3c34d",
+    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+}
+
+
+#####
+GET http://localhost:5050/posts/title?postTitle=prova
+
+#####
+DELETE http://localhost:5050/posts/64b17044ddff6c4aadc6507f
+
+#####
+PATCH http://localhost:5050/posts/64b16db6e0bbee8edc19dd42 HTTP/1.1
+Content-Type: application/json
+
+{
+    "cover": "http://nuovacover.jpg"
+}

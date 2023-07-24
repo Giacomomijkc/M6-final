@@ -1,0 +1,9 @@
+#####
+POST http://localhost:5050/comments/create HTTP/1.1
+Content-Type: application/json
+
+{
+    "rate": "5",
+    "content": "bellissimo post!",
+    "post": "64bed6747a02c243b19d0efa"
+}
