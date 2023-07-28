@@ -1,20 +1,26 @@
-const express =  require ('express')
-const mongoose = require('mongoose')
-const cors = require('cors')
+const express =  require ('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
 const PORT = 5050;
 
 require('dotenv').config();
-
-const app = express();
 
 const authorsRoute = require('./routes/authors');
 const postsRoute = require('./routes/posts');
 const resourcesRoute = require('./routes/resources');
 const commentsRoute = require('./routes/comments')
 
-app.use(express.json())
+const app = express();
+
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
 app.use(cors());
-app.use('/', authorsRoute)
+//middleware
+app.use(express.json())
+
+//use routes
+app.use('/', authorsRoute);
 app.use('/', postsRoute);
 app.use('/', resourcesRoute);
 app.use('/', commentsRoute);

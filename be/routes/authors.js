@@ -6,23 +6,37 @@ const PostsModel = require('../models/postModel');
 //const { authorsBodyParams, validatePostAuthor } = require('../middlewares/authorPostValidation');
 //const {validatePatchBodyAuthors, validatePatchBodyAuthorMiddleware} = require('../middlewares/authorPatchValidations')
 
+const multer = require('multer');
+const cloudinary = require ('cloudinary').v2;
+const {CloudinaryStorage} = require('multer-storage-cloudinary');
+const crypto = require('crypto');
+
 const author = express.Router()
 
-author.get('/authors', async (req, res)  =>{
-    try {
-        const authors = await AuthorsModel.find()
-        .populate("posts");
+//come recuperare il nome del file
+const internalStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads');
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        const fileExtension = file.originalname.split(".").pop();
+		cb(null, `${file.fieldname}-${uniqueSuffix}.${fileExtension}`);
+    },
+});
 
-        res.status(200).send({
-            statusCode: 200,
-            authors: authors,
-        });
+// questo è un middleware che va messo nelle rotte dove carichiamo immagini
+const uploads = multer({storage: internalStorage});
+
+//il contenuto di uploads.single('') dovrà sempre essere uguale al name dell'input
+author.post('/authors/uploadImg', uploads.single('avatar'), async (req, res) =>{
+    const url = req.protocol + "://" + req.get("host");
+    try {
+        const imgUrl = req.file.filename;
+        res.status(200).json({ avatar: `${url}/uploads/${imgUrl}` })
     } catch (error) {
-        res.status(500).send({
-            statusCode: 500,
-            message:'Internal server Error ',
-            error
-        });
+        console.error('File upload failed', error);
+        res.status(500).json({ avatar: "File upload failed" });
     }
 });
 
@@ -30,7 +44,8 @@ author.get('/authors/:authorId', async (req, res) => {
     const { authorId } = req.params;
 
     try {
-        const authorById = await AuthorsModel.findById(authorId);
+        const authorById = await AuthorsModel.findById(authorId)
+        .populate("posts")
 
         res.status(200).send({
             statusCode: 200,
@@ -50,14 +65,23 @@ author.get('/authors/:id/posts', async (req, res) => {
     const {id} = req.params;
 
     try {
-        const findAuthor = await AuthorsModel.findById(id);
+        const findAuthor = await AuthorsModel.findById(id)
 
-        const findPost = await PostsModel.find({"author.name": findAuthor.name});
+        if (!findAuthor) {
+            return res.status(404).send({
+                statusCode: 404,
+                message: `Author with id ${id} not found`
+            });
+        }
+   
+        const findPost = await PostsModel.find({author: findAuthor._id})
+    
     
         res.status(200).send({
             statusCode: 200,
             message: `posts of Author with id ${id} successfully finded`,
-            findPost});
+            findPost
+        });
     } catch (error) {
         res.status(500).send({
             statusCode: 500,
@@ -66,6 +90,24 @@ author.get('/authors/:id/posts', async (req, res) => {
         });
     }
 })
+
+author.get('/authors', async (req, res)  =>{
+    try {
+        const authors = await AuthorsModel.find()
+        .populate("posts")
+
+        res.status(200).send({
+            statusCode: 200,
+            authors: authors,
+        });
+    } catch (error) {
+        res.status(500).send({
+            statusCode: 500,
+            message:'Internal server Error ',
+            error
+        });
+    }
+});
 
 //rimettere validazioni
 author.post('/authors/create', async (req, res) => {
