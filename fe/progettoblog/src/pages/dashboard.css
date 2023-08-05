@@ -1,0 +1,47 @@
+.avatar{
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+}
+
+.cover{
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.post-info-text{
+    font-size: small;
+    font-weight: bold;
+}
+
+.article-buttons{
+    width: 130px;
+    font-size: 1pt;
+    padding: 0px;
+}
+
+.data-button{
+    width: 100px;
+    font-size: 1pt;
+    padding: 0px;
+}
+
+.box-data{
+    border: solid 1px lightgray;
+    border-radius: 10px;
+    padding: 10px
+}
+
+*{
+    box-sizing: border-box;
+}
+
+.violet{
+    color: blueviolet;
+}
+
+.post-content{
+    font-style: italic;
+}
+

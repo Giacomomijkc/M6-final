@@ -1,0 +1,32 @@
+.post-image{
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.avatar-class{
+    width: 30px;
+    height: 30px;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+.post-info-text{
+    font-size: small;
+    font-weight: bold;
+}
+
+.post-content{
+    font-style: italic;
+}
+
+.article-button{
+    width: 150px;
+    font-size: 5pt;
+    padding: 0px;
+}
+
+.link{
+    text-decoration: none !important;
+    color: gray;
+}

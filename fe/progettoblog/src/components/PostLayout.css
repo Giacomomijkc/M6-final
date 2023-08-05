@@ -1,0 +1,24 @@
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+.centered-content {
+    text-align: center;
+  }
+
+.avatar-class{
+    width: 30px;
+    border-radius: 20px;
+}
+
+.post-info-text{
+    font-size: small;
+    font-weight:lighter;
+}
+
+.cover-article{
+    width: 600px;
+}
