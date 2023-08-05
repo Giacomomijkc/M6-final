@@ -9,7 +9,9 @@ require('dotenv').config();
 const authorsRoute = require('./routes/authors');
 const postsRoute = require('./routes/posts');
 const resourcesRoute = require('./routes/resources');
-const commentsRoute = require('./routes/comments')
+const commentsRoute = require('./routes/comments');
+const loginRoute = require('./routes/login');
+const dashboardRoute = require('./routes/dashboard');
 
 const app = express();
 
@@ -24,6 +26,8 @@ app.use('/', authorsRoute);
 app.use('/', postsRoute);
 app.use('/', resourcesRoute);
 app.use('/', commentsRoute);
+app.use('/', loginRoute);
+app.use('/', dashboardRoute);
 
 mongoose.connect(process.env.MONGO_DB_URL);
 

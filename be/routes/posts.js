@@ -3,6 +3,7 @@ const express = require('express');
 
 const PostsModel = require('../models/postModel');
 const AuthorsModel = require('../models/authorModel');
+const verifyToken = require('../middlewares/verifyToken');
 //const { postsBodyParams, validatePostBody } = require('../middlewares/postPostValidation');
 //const { validatePatchBody, validatePatchBodyMiddleware } = require('../middlewares/postPatchValidation');
 const multer = require('multer');
@@ -38,6 +39,38 @@ post.post('/posts/uploadImg', uploads.single('cover'), async (req, res) =>{
         res.status(500).json({ error: "File upload failed" });
     }
 });
+
+post.patch('/posts/:postId/updateImg', uploads.single('cover'), async (req, res) => {
+    const url = req.protocol + "://" + req.get("host");
+
+    const { postId } = req.params;
+
+    const postExist = await PostsModel.findById(postId);
+
+    if (!postExist){
+        res.status(400).send({
+            statusCode: 400,
+            message: `Post with id ${postId} not found`
+        })
+    }
+
+    try {
+      const imgUrl = req.file.filename;
+      const dataToUpdate = { cover: `${url}/uploads/${imgUrl}` };
+      const options = {new: true}
+      const result = await PostsModel.findByIdAndUpdate(postId, dataToUpdate, options);
+        
+      res.status(200).json({ 
+        cover: result.cover,
+        statusCode: 202,
+        message: `Post with id ${postId} successfully updated`,
+        result
+    });
+    } catch (error) {
+      console.error('File updating failed', error);
+      res.status(500).json({ error: "File updating failed" });
+    }
+  });
 
 post.get('/posts/:postId', async (req, res) => {
     const {postId} = req.params;
@@ -130,7 +163,7 @@ post.get('/posts', async (req,res) => {
 
 
 //rimettere validazione
-post.post('/posts/create', async (req, res) => {
+post.post('/posts/create', verifyToken, async (req, res) => {
 
     const author = await AuthorsModel.findOne({_id: req.body.author});
 
@@ -155,6 +188,7 @@ post.post('/posts/create', async (req, res) => {
 
     try {
         const post = await newPost.save();
+        console.log(req);
 
         await AuthorsModel.updateOne({_id: author.id}, {$push: {posts: post}});
 
@@ -201,7 +235,7 @@ post.delete('/posts/:postId', async (req, res) => {
 })
 
 //rimettere validazioni
-post.patch('/posts/:postId', async (req, res) => {
+post.patch('/posts/:postId', verifyToken, async (req, res) => {
     const { postId } = req.params;
 
     const postExist = await PostsModel.findById(postId);

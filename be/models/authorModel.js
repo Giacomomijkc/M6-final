@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const AuthorModelSchema = new mongoose.Schema({
     name:{
@@ -10,6 +10,10 @@ const AuthorModelSchema = new mongoose.Schema({
         //required: true
     },
     email:{
+        type: String,
+        //required: true
+    },
+    password:{
         type: String,
         //required: true
     },

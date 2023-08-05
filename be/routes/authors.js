@@ -1,8 +1,10 @@
-const mongoose = require('mongoose')
-const express = require('express')
+const mongoose = require('mongoose');
+const express = require('express');
+const bcrypt = require('bcrypt');
 
 const AuthorsModel = require('../models/authorModel');
 const PostsModel = require('../models/postModel');
+const verifyToken = require('../middlewares/verifyToken');
 //const { authorsBodyParams, validatePostAuthor } = require('../middlewares/authorPostValidation');
 //const {validatePatchBodyAuthors, validatePatchBodyAuthorMiddleware} = require('../middlewares/authorPatchValidations')
 
@@ -39,6 +41,35 @@ author.post('/authors/uploadImg', uploads.single('avatar'), async (req, res) =>{
         res.status(500).json({ avatar: "File upload failed" });
     }
 });
+
+author.patch('/authors/:authorId/updateImg', uploads.single('avatar'), async (req, res) =>{
+    const url = req.protocol + "://" + req.get("host");
+    const {authorId} = req.params;
+    const authorExist = await AuthorsModel.findById(authorId);
+
+    if(!authorExist){
+        res.status(400).send({
+            statusCode: 400,
+            message:`Author with id ${authorId} not found`
+        })
+    }
+    try {
+        const imgUrl = req.file.filename;
+        const dataToUpdate = {avatar: `${url}/uploads/${imgUrl}`};
+        const options = {new: true}
+        const result = await AuthorsModel.findByIdAndUpdate(authorId, dataToUpdate, options);
+
+        res.status(200).json({
+            avatar: result.avatar,
+            statuCode: 202,
+            message: `Author with id ${authorId} successfully updated`,
+            result
+        })
+    } catch (error) {
+        console.error('Author updating failed', error);
+        res.status(500).json({ error: "Author updating failed" });
+    }
+} )
 
 author.get('/authors/:authorId', async (req, res) => {
     const { authorId } = req.params;
@@ -111,10 +142,15 @@ author.get('/authors', async (req, res)  =>{
 
 //rimettere validazioni
 author.post('/authors/create', async (req, res) => {
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
     const newAuthor = new AuthorsModel({
         name: req.body.name,
         surname: req.body.surname,
         email: req.body.email,
+        password: hashedPassword,
         dateOfBirth: req.body.dateOfBirth,
         avatar: req.body.avatar
     })
@@ -137,7 +173,7 @@ author.post('/authors/create', async (req, res) => {
 })
 
 //rimettere validazioni
-author.patch('/authors/:authorId',async (req, res) => {
+author.patch('/authors/:authorId', verifyToken, async (req, res) => {
     const { authorId } = req.params;
 
     const authorExist = await AuthorsModel.findById(authorId);
