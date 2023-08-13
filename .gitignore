@@ -1,0 +1,9 @@
+be/node_modules
+fe/progettoblog/node_modules
+be/.env
+fe/progettoblog/.env
+be/.DS_Store
+fe/progettoblog/.DS_Store
+fe/progettoblog/src/.DS_Store
+fe/progettoblog/src/assets/.DS_Store
+.DS_Store
