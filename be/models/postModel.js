@@ -11,16 +11,16 @@ const PostModelSchema = new mongoose.Schema({
     },
     cover: {
         type: String,
-        //required: true
+        required: true
     },
     readTime:{
       value:{
         type: Number,
-        //required: false
+        required: false
       },
       unit:{
         type: String,
-        //required: false
+        required: false
       },
     },
     author:{
@@ -29,7 +29,7 @@ const PostModelSchema = new mongoose.Schema({
     },
     content:{
         type: String,
-        //required: true
+        required: true
     },
     comments: [
       {

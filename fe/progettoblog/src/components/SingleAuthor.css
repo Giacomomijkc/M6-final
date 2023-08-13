@@ -4,3 +4,31 @@
     border-radius: 50px;
     object-fit: cover;
 }
+
+@media (max-width: 576px) {
+    .author-avatar {
+      width: 30px;
+      height: 30px;
+    }
+}
+
+.text{
+    font-size: medium;
+}
+
+@media (max-width: 576px) {
+    .text {
+      font-size: x-small;
+    }
+}
+
+.button{
+    width: 150px;
+}
+
+@media (max-width: 576px) {
+    .button {
+      width: 50px !important;  
+      font-size: xx-small !important;
+    }
+}

@@ -3,10 +3,11 @@ import Card from 'react-bootstrap/Card';
 import CardHeader from 'react-bootstrap/esm/CardHeader';
 import './SinglePost.css';
 import { Link } from 'react-router-dom';
-
+import { useTheme } from '../components/ThemeContext';
 
 const SinglePost = ({post, author}) => {
 
+  const { theme, toggleTheme } = useTheme();
   const MAX_CONTENT_LENGTH = 100
 
   const truncatedContent = 
@@ -14,7 +15,7 @@ const SinglePost = ({post, author}) => {
     : post.content;
 
     return(
-        <Card style={{ width: '20rem' }} key={post._id} className='my-3'>
+        <Card style={{ width: '20rem' }} key={post._id} className={`my-3 ${theme === 'dark' ? 'dark-theme' : ''}`}>
         <Card.Img className='post-image' variant="top" src={post.cover} />
         <CardHeader>
           <Card.Title>{post.title}</Card.Title>
@@ -31,7 +32,7 @@ const SinglePost = ({post, author}) => {
             <Card.Text className='vertical-alignment-center'>
               <Link className='link' to={`/authors/${author._id}`} >
                 <img src={author.avatar} alt="Author Avatar" className="avatar-class mx-2 my-2" />  
-                <span className="avatar-clas mx-2 my-2s">{`${author.name} ${author.surname}`}</span>
+                <span className="mx-2 my-2s">{`${author.name} ${author.surname}`}</span>
               </Link>
             </Card.Text>
           ) : (

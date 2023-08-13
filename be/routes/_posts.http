@@ -26,12 +26,14 @@ GET http://localhost:5050/posts/title?postTitle=titolo
 GET http://localhost:5050/posts/64bfc5ad70d73e952ce050e3
 
 #####
-DELETE http://localhost:5050/posts/64b17044ddff6c4aadc6507f
-
-#####
-PATCH http://localhost:5050/posts/64bed5773120be802dc3c350 HTTP/1.1
+DELETE http://localhost:5050/posts/64d0b26ec37c5bd46c774a5c
 Content-Type: application/json
 
+#####
+PATCH http://localhost:5050/posts/64c3e71f219dcb37cd041abe HTTP/1.1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiR2lhY29tbyIsInN1cm5hbWUiOiJDYXNvbG8iLCJlbWFpbCI6ImdpYWNvbW9AbWUuaXQiLCJkYXRlT2ZCaXJ0aCI6IjE5OTEvMTAvMDUiLCJfaWQiOiI2NGM4ZWIyYjg0MDlkZTIxODYzYmRiZTQiLCJpYXQiOjE2OTEyMzY3MzksImV4cCI6MTY5MTMyMzEzOX0.awfr8BoZqZlf5yytOrCaflJRNesvFr2jLzBW56g3SoU
+
 {
-    "cover": "http://nuovacover.jpg"
+    "title": "EVVIVA DIO"
 }

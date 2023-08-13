@@ -2,20 +2,20 @@ import React from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import DeleteAuthorButton from './DeleteAuthorButton';
 import { useState, useRef } from 'react';
+import { useTheme } from '../components/ThemeContext';
 const apiUrl = "http://localhost:5050/authors/";
 
-const EditAuthorModal = ({authorId, ShowEditAuthorModal, setShowEditAuthorModal}) => {
+const EditAuthorModal = ({authorId, showEditAuthorModal, handleCloseEditAuthorModal, refreshAuthor, authorPosts}) => {
 
+    const { theme, toggleTheme } = useTheme();
     const [formData, setFormData] = useState({});
     const [file, setFile] = useState(null);
     const coverInputRef = useRef(null);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const closeShowEditAuthorModal = () => {
-        setShowEditAuthorModal(false);
-      };
 
     const handleFileChange = (e) => {
         //quando facciamo upload di un input di tipo file il file si trova sempre all'array 0 della proprietà file
@@ -67,6 +67,7 @@ const EditAuthorModal = ({authorId, ShowEditAuthorModal, setShowEditAuthorModal}
                     setFile('Nessun file selezionato')
                     coverInputRef.current.value = null;
                     setSuccessMessage('Author succesfully edited!')
+                    refreshAuthor()
                   }
             
                 return response.json();
@@ -92,6 +93,7 @@ const EditAuthorModal = ({authorId, ShowEditAuthorModal, setShowEditAuthorModal}
                     setFile('Nessun file selezionato')
                     coverInputRef.current.value = null;
                     setSuccessMessage('Author succesfully edited!')
+                    refreshAuthor()
                   }
             
                 return response.json();
@@ -106,13 +108,13 @@ const EditAuthorModal = ({authorId, ShowEditAuthorModal, setShowEditAuthorModal}
       className="modal show"
       style={{ display: 'block', position: 'initial' }}
     >
-      <Modal.Dialog>
-        <Modal.Header>
+      <Modal show={showEditAuthorModal} onHide={handleCloseEditAuthorModal}>
+        <Modal.Header className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
           <Modal.Title>Edit Author's Data</Modal.Title>
         </Modal.Header>
 
-        <Modal.Body>
-        <Form style={{ width: '30rem'}} encType='multipart/form-data' onSubmit={submitForm}>
+        <Modal.Body className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
+        <Form style={{ width: '30rem'}} encType='multipart/form-data' onSubmit={submitForm} className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
                         <Form.Group className="mb-3" controlId="createAuthorForm.ControlInput1">
                             <Form.Label>Name</Form.Label>
                             <Form.Control 
@@ -177,6 +179,7 @@ const EditAuthorModal = ({authorId, ShowEditAuthorModal, setShowEditAuthorModal}
                         type="submit"
                         variant="success"
                         >Edit Author</Button>
+                        <DeleteAuthorButton authorId={authorId} authorPosts={authorPosts}  />
                     </Form>
                     {successMessage && (
                         <div className="alert alert-success mt-3" role="alert">
@@ -190,10 +193,10 @@ const EditAuthorModal = ({authorId, ShowEditAuthorModal, setShowEditAuthorModal}
                     )}
         </Modal.Body>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={closeShowEditAuthorModal}>Close</Button>
+        <Modal.Footer className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
+          <Button variant="secondary" onClick={handleCloseEditAuthorModal}>Close</Button>
         </Modal.Footer>
-      </Modal.Dialog>
+      </Modal>
     </div>
   )
 }

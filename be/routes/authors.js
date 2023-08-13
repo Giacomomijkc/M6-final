@@ -207,7 +207,7 @@ author.patch('/authors/:authorId', verifyToken, async (req, res) => {
     }
 })
 
-author.delete('/authors/:authorId', async (req, res) => {
+author.delete('/authors/:authorId', verifyToken, async (req, res) => {
     const { authorId } = req.params;
 
     const authorExist = await AuthorsModel.findById(authorId);
@@ -220,7 +220,14 @@ author.delete('/authors/:authorId', async (req, res) => {
     }
 
     try {
-        const deleteAuthorById = await AuthorsModel.findByIdAndDelete(authorId)
+
+        const authorPosts = await PostsModel.find({ author: authorId });
+
+        await Promise.all(authorPosts.map(async (post) => {
+            await PostsModel.findByIdAndDelete(post._id);
+        }));
+
+      await AuthorsModel.findByIdAndDelete(authorId)
 
         res.status(200).send({
             statusCode: 200,

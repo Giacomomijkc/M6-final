@@ -4,17 +4,21 @@ import { useState, useRef } from 'react';
 import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
+import Modal from 'react-bootstrap/Modal';
+import { useTheme } from '../components/ThemeContext';
 const authorApiUrl = "http://localhost:5050/authors/create";
 const apiUrlFile = "http://localhost:5050/authors/uploadImg"
 
-const CreateAuthorInput = () => {
+const CreateAuthorInput = ({handleCloseCreateAuthorInput, showCreateAuthorInput}) => {
 
+    const { theme } = useTheme();
 
     const [formData, setFormData] = useState({});
     const [file, setFile] = useState(null);
     const coverInputRef = useRef(null);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+
 
     const handleFileChange = (e) => {
         //quando facciamo upload di un input di tipo file il file si trova sempre all'array 0 della proprietà file
@@ -78,10 +82,15 @@ const CreateAuthorInput = () => {
 
 
     return (
-        <Container className='fluid mt-5 d-flex justify-content-center align-items-center'>
+        <Container className={`fluid mt-5 d-flex justify-content-center align-items-center ${theme === 'dark' ? 'dark-theme' : ''}`}>
             <Row>
                 <Col className='col-md-10'>
-                    <Form style={{ width: '30rem'}} encType='multipart/form-data' onSubmit={submitForm}>
+                <Modal  show={showCreateAuthorInput} onHide={handleCloseCreateAuthorInput}>
+                    <Modal.Header className={`${theme === 'dark' ? 'dark-theme' : ''}`}>
+                            <Modal.Title>Create Your Comment</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className={`${theme === 'dark' ? 'dark-theme' : ''}`}>
+                        <Form style={{ width: '30rem'}} encType='multipart/form-data' onSubmit={submitForm} className={`${theme === 'dark' ? 'dark-theme' : ''}`}>
                         <Form.Group className="mb-3" controlId="createAuthorForm.ControlInput1">
                             <Form.Label>Name</Form.Label>
                             <Form.Control 
@@ -157,6 +166,13 @@ const CreateAuthorInput = () => {
                             {errorMessage}
                         </div>
                     )}
+                    </Modal.Body>
+                    <Modal.Footer className={`${theme === 'dark' ? 'dark-theme' : ''}`}>
+                        <Button variant="secondary" onClick={handleCloseCreateAuthorInput}>
+                                Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
                 </Col>
             </Row>
         </Container>

@@ -9,16 +9,36 @@
     text-align: center;
   }
 
-.avatar-class{
+  .avatar-class{
     width: 30px;
+    height: 30px;
     border-radius: 20px;
+    object-fit: cover;
 }
 
-.post-info-text{
+.comment-info-text{
     font-size: small;
     font-weight:lighter;
 }
 
+.comment-content{
+  font-style: italic;
+}
+
+.delete-comment-icon {
+  cursor: pointer;
+  color: red;
+  font-size: 18px;
+  margin-left: auto;
+}
+
 .cover-article{
     width: 600px;
+}
+
+.avatar{
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  object-fit: cover;
 }

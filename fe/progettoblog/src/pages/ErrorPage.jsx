@@ -1,12 +1,25 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import NavigationBar from '../components/NavigationBar';
 import Footer from '../components/Footer';
+import Container from 'react-bootstrap/Container';
 
-export const ErrorPage = () => {
+export const ErrorPage = ({userData, fetchUserDataAndPostDetails}) => {
+
+ 
+  useEffect(() => {        
+    fetchUserDataAndPostDetails();
+  }, []);
+  
+  console.log(userData);
+
   return (
     <>
-    <div>
-        <h1>OOOps, non abbiamo trovato questa pagina</h1>
-    </div>
+    <NavigationBar showSearch={false} userData={userData} />
+    <Container className='fluid'>
+      <div>
+          <div className='alert alert-warning' role='alert'>OOOps, non abbiamo trovato questa pagina</div>
+      </div>
+    </Container>
     <Footer />
     </>
   )

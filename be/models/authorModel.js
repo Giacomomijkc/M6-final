@@ -3,27 +3,27 @@ const mongoose = require('mongoose');
 const AuthorModelSchema = new mongoose.Schema({
     name:{
         type: String,
-        //required: true
+        required: true
     },
     surname:{
         type: String,
-        //required: true
+        required: true
     },
     email:{
         type: String,
-        //required: true
+        required: true
     },
     password:{
         type: String,
-        //required: true
+        required: true
     },
     dateOfBirth:{
         type: String,
-        //required: true
+        required: true
     },
     avatar:{
         type: String,
-        //required: false
+        required: false
     },
     posts:[
         {

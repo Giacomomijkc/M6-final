@@ -9,12 +9,14 @@ import CreateAuthorInput from '../components/CreateAuthorInput';
 import Footer from '../components/Footer';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../components/ThemeContext';
+import './login.css';
 const apiUrlLogin = "http://localhost:5050/login"
 
 const Login = () => {
     
+    const { theme, toggleTheme } = useTheme();
     const [loginFormData, setLoginFormData] = useState({});
-    const [isLogged, setIsLogged] = useState(false);
     const navigate = useNavigate();
 
     const [showCreateAuthorInput, setShowCreateAuthorInput] = useState(false);
@@ -23,9 +25,9 @@ const Login = () => {
       setShowCreateAuthorInput(true);
     };
 
-    useEffect(() => {
-      console.log('isLogged:', isLogged);
-    }, [isLogged]);
+    const handleCloseCreateAuthorInput = () => {
+      setShowCreateAuthorInput(false);
+    };
 
     const onSubmit = async(e) =>{
         e.preventDefault();
@@ -45,8 +47,6 @@ const Login = () => {
           
                 const data = await response.json();
                 localStorage.setItem("userLoggedIn", JSON.stringify(data.token));
-                setIsLogged(true);
-                console.log(isLogged)
                 console.log('token salvato')
                 navigate('/dashboard');
               } catch (error) {
@@ -54,10 +54,15 @@ const Login = () => {
               }
     };
 
+    const handleLoginGitHub =  () => {
+      window.location.href = 'http://localhost:5050/auth/github'
+    }
+
   return (
     <>
+    <div className={`${theme === 'dark' ? 'dark-theme' : ''}`}>
     <NavigationBar showSearch={false}></NavigationBar>
-    <Container className='fluid mt-5 d-flex justify-content-center align-items-center' style={{marginBottom: "300px"}}>
+    <Container className={`fluid mt-5 d-flex justify-content-center align-items-center ${theme === 'dark' ? 'dark-theme' : ''}`} style={{marginBottom: "300px"}}>
             <Row>
                 <Col className='col-md-10'>
                     <Form style={{ width: '30rem'}} onSubmit={onSubmit}>
@@ -91,19 +96,25 @@ const Login = () => {
                         >Login</Button>
                     </Form>
                     <Button
+                        onClick={handleLoginGitHub}
+                        variant="success"
+                        type="submit"
+                        >Login con GitHub</Button>
+                    <Button
                       variant="info"
                       onClick={handleShowCreateAuthorInput}
                       className="mt-3"
                     >
                      Non sei registrato?
                     </Button>
-                    <div className='ps-4'>
-                      {showCreateAuthorInput && <CreateAuthorInput />}
+                    <div className='ps-4' >
+                      {showCreateAuthorInput && <CreateAuthorInput showCreateAuthorInput={showCreateAuthorInput} handleCloseCreateAuthorInput={handleCloseCreateAuthorInput} />}
                     </div>
                 </Col>
             </Row>
         </Container>
         <Footer />
+    </div>
         </>
   )
 }

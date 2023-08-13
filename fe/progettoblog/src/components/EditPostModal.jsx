@@ -3,18 +3,24 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useState, useRef } from 'react';
+import DeletePostButton from './DeletePostButton';
+import { useTheme } from '../components/ThemeContext';
 const apiUrl = "http://localhost:5050/posts/";
 
-const EditPostModal = ({postId, handleIdPostToEdit}) => {
+const EditPostModal = ({postId, authorId, handleIdPostToEdit, refreshPosts}) => {
+
+    const { theme, toggleTheme } = useTheme();
     const [formData, setFormData] = useState({});
     const [file, setFile] = useState(null);
     const coverInputRef = useRef(null);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [showEditPostModal, setShowEditPostModal] = useState(true);
 
-    const closeShowEditPostModal = () => {
+    const handleCloseEditPostModal = () => {
+        setShowEditPostModal(false);
         handleIdPostToEdit(null);
-      };
+    };
 
     const handleFileChange = (e) => {
         //quando facciamo upload di un input di tipo file il file si trova sempre all'array 0 della proprietà file
@@ -71,6 +77,7 @@ const EditPostModal = ({postId, handleIdPostToEdit}) => {
                     setFile('Nessun file selezionato')
                     coverInputRef.current.value = null;
                     setSuccessMessage('Post succesfully edited!')
+                    refreshPosts()
                   }
             
                 return response.json();
@@ -96,6 +103,7 @@ const EditPostModal = ({postId, handleIdPostToEdit}) => {
                     setFile('Nessun file selezionato')
                     coverInputRef.current.value = null;
                     setSuccessMessage('Post succesfully edited!')
+                    refreshPosts()
                   }
             
                 return response.json();
@@ -128,18 +136,19 @@ const EditPostModal = ({postId, handleIdPostToEdit}) => {
         "CSS"
     ];
 
+
   return (
     <div
-    className="modal show"
+    className="modal modal-container"
     style={{ display: 'block', position: 'initial' }}
   >
-    <Modal.Dialog showEditPostModal={true}>
-      <Modal.Header>
+    <Modal centered show={showEditPostModal} onHide={handleCloseEditPostModal}>
+      <Modal.Header className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
         <Modal.Title>Edit Article's data</Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
-      <Form style={{ width: '30rem'}} encType='multipart/form-data' onSubmit={submitForm}>
+      <Modal.Body className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
+      <Form style={{ width: '30rem'}} encType='multipart/form-data' onSubmit={submitForm} className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
             <Form.Group className="mb-3" controlId="createPostForm.ControlInput1">
                 <Form.Label>Title</Form.Label>
                 <Form.Control 
@@ -217,7 +226,7 @@ const EditPostModal = ({postId, handleIdPostToEdit}) => {
             type="submit"
             variant="success"
             >Edit Post</Button>
-            {/*<DeletePostButton postId={postId} />*/}
+            <DeletePostButton refreshPosts={refreshPosts} authorId={authorId} postId={postId}>Delete Post</DeletePostButton>
         </Form>
         {successMessage && (
       <div className="alert alert-success mt-3" role="alert">
@@ -231,10 +240,10 @@ const EditPostModal = ({postId, handleIdPostToEdit}) => {
     )}
       </Modal.Body>
 
-      <Modal.Footer>
-        <Button variant="secondary" onClick={closeShowEditPostModal}>Close</Button>
+      <Modal.Footer className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
+        <Button variant="secondary" onClick={handleCloseEditPostModal}>Close</Button>
       </Modal.Footer>
-    </Modal.Dialog>
+    </Modal>
   </div>
   )
 }

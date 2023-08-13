@@ -12,6 +12,7 @@ const resourcesRoute = require('./routes/resources');
 const commentsRoute = require('./routes/comments');
 const loginRoute = require('./routes/login');
 const dashboardRoute = require('./routes/dashboard');
+const githubRoute = require('./routes/githubRoute')
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/', resourcesRoute);
 app.use('/', commentsRoute);
 app.use('/', loginRoute);
 app.use('/', dashboardRoute);
+app.use('/', githubRoute);
 
 mongoose.connect(process.env.MONGO_DB_URL);
 

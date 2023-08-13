@@ -1,0 +1,6 @@
+.content-container {
+    margin: 0; 
+    transition: margin 0.3s ease-in-out; 
+    min-height: 100vh;
+  }
+

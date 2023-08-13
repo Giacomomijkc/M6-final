@@ -3,18 +3,22 @@ const mongoose = require('mongoose');
 const CommentModelSchema = new mongoose.Schema({
     rate:{
         type: Number,
-        //required: true,
+        required: true,
         min: 0,
         max: 5,
         default: 5
     },
     content:{
         type: String,
-        //required: true
+        required: true
     },
     post:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "POST"
+    },
+    author:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"AUTHOR"
     }
 
 }, {timestamps: true, strict: true});

@@ -4,16 +4,29 @@ import { useState, useRef } from 'react';
 import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
+import { useNavigate } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
+import { useTheme } from '../components/ThemeContext';
 const apiUrl = "http://localhost:5050/posts/create";
 const apiUrlFile = "http://localhost:5050/posts/uploadImg"
 
 const CreatePostInput = ({getPosts, getAuthors, getComments}) => {
-    
+
+    const { theme, toggleTheme } = useTheme();
+
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({});
     const [file, setFile] = useState(null);
     const coverInputRef = useRef(null);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const isUserLoggedIn = localStorage.getItem("userLoggedIn"); 
+  
+    let decodedToken = null;
+
+    if (isUserLoggedIn) {
+        decodedToken = jwt_decode(isUserLoggedIn);
+    } 
 
     const handleFileChange = (e) => {
         //quando facciamo upload di un input di tipo file il file si trova sempre all'array 0 della proprietà file
@@ -34,7 +47,7 @@ const CreatePostInput = ({getPosts, getAuthors, getComments}) => {
             });
             return await response.json()
         } catch (error) {
-            console.error('File upload errors occured');
+            console.error('File upload errors occured', error);
         }
 
     };
@@ -51,7 +64,7 @@ const CreatePostInput = ({getPosts, getAuthors, getComments}) => {
                 const uploadedFile = await uploadFile(file);
                 const postFormData = {
                     ...formData,
-                    cover: uploadedFile.cover,
+                    cover: uploadedFile.cover, author: decodedToken._id,
                 };
 
                 const response = await fetch(apiUrl, {
@@ -70,6 +83,9 @@ const CreatePostInput = ({getPosts, getAuthors, getComments}) => {
                     setFile('Nessun file selezionato')
                     coverInputRef.current.value = null;
                     setSuccessMessage('Post succesfully sent!')
+                    setTimeout(() => {
+                        navigate('/');
+                    }, 2000);
                   }
             
                 return response.json();
@@ -107,9 +123,9 @@ const CreatePostInput = ({getPosts, getAuthors, getComments}) => {
     return (
    
 <Container className='fluid mt-5 d-flex justify-content-center align-items-center'>
-<Row>
-    <Col className='col-md-10'>
-        <Form style={{ width: '30rem'}} encType='multipart/form-data' onSubmit={submitForm}>
+<Row >
+    <Col className={` col-md-10 ${theme === 'dark' ? 'dark-theme' : ''}`}>
+        <Form style={{ width: '30rem'}} encType='multipart/form-data' onSubmit={submitForm} className={`mb-5 ${theme === 'dark' ? 'dark-theme' : ''}`}>
             <Form.Group className="mb-3" controlId="createPostForm.ControlInput1">
                 <Form.Label>Title</Form.Label>
                 <Form.Control 
@@ -164,19 +180,6 @@ const CreatePostInput = ({getPosts, getAuthors, getComments}) => {
                     <option value="hours">hours</option>
                     <option value="days">days</option>
                 </Form.Control>
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="createPostForm.ControlInput5">
-                <Form.Label>Author ID </Form.Label>
-                <Form.Control 
-                type="text" 
-                placeholder="Type your Author ID" 
-                name="author" 
-                value={formData.author || ''}
-                onChange={(e) => setFormData({
-                    ...formData,
-                    author: e.target.value
-                })}
-                />
             </Form.Group>
             <Form.Group className="mb-3" controlId="createPostForm.ControlInput6">
             <Form.Label>Category </Form.Label>

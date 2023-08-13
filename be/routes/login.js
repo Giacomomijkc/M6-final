@@ -29,6 +29,7 @@ login.post('/login', async (req, res) =>{
         surname: user.surname,
         email: user.email,
         dateOfBirth: user.dateOfBirth,
+        avatar: user.avatar,
         _id: user._id,
         
     }, process.env.JWT_SECRET,
@@ -37,7 +38,7 @@ login.post('/login', async (req, res) =>{
 
     res.header('Authorization', token).status(200).send({
         statusCode: 200,
-        token,
+        token
     })
 });
 

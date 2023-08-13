@@ -3,8 +3,10 @@ import Container from 'react-bootstrap/esm/Container';
 import Col from 'react-bootstrap/Col';
 import SinglePost from './SinglePost';
 import {useEffect } from 'react';
+import { useTheme } from './ThemeContext';
 
 const AllPosts = ({posts, query, authors, getPosts, getAuthors, getComments}) => {
+    const { theme } = useTheme();
 
     useEffect(() => {
         getPosts();
@@ -40,13 +42,14 @@ const AllPosts = ({posts, query, authors, getPosts, getAuthors, getComments}) =>
     }
 
     return(
-        <Container className="fluid my-5 justify-content-center">
+        <div className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
+            <Container className={`fluid justify-content-center ${theme === 'dark' ? 'dark-theme' : ''}`}>
             <Row>
                 <Col className="col-md-12">
                     <div className='d-flex justify-content-center gap-2 flex-wrap'>
                         {query !== '' ? (
                             filteredPosts.map((filteredPost) =>(
-                                <SinglePost
+                                <SinglePost 
                                 key = {filteredPost._id}
                                 post = {filteredPost}
                                 author={findAuthorForPost(filteredPost._id)}
@@ -64,6 +67,7 @@ const AllPosts = ({posts, query, authors, getPosts, getAuthors, getComments}) =>
                 </Col>
             </Row>
         </Container>
+        </div>
     );
 };
 

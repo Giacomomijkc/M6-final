@@ -3,7 +3,8 @@ const express = require('express');
 
 const CommentsModel = require('../models/commentModel');
 const PostsModel = require('../models/postModel');
-const commentModel = require('../models/commentModel');
+const AuthorsModel = require('../models/authorModel');
+const verifyToken = require('../middlewares/verifyToken');
 
 const comment = express.Router();
 
@@ -54,7 +55,7 @@ comment.get('/comments', async (req, res) => {
     }
 })
 
-comment.post('/comments/create', async (req,res) => {
+comment.post('/comments/create', verifyToken, async (req,res) => {
 
     const post = await PostsModel.findOne({_id: req.body.post});
 
@@ -65,11 +66,20 @@ comment.post('/comments/create', async (req,res) => {
         })
     }
 
+    const author = await AuthorsModel.findOne({_id: req.body.author});
+
+    if(!author){
+        return res.status(400).send({
+            statusCode: 400,
+            message:`Author with id ${_id} not found`
+        })
+    }
+
     const newComment = new CommentsModel({
         rate: req.body.rate,
         content: req.body.content,
-        post: req.body.cover,
         post: post._id,
+        author: req.body.author
     })
 
     try {
@@ -95,17 +105,26 @@ comment.post('/comments/create', async (req,res) => {
 comment.delete('/comments/:id', async (req,res) => {
     const {id} = req.params;
 
-    const commentExist = await CommentsModel.findById(id);
-
-    if(!commentExist){
-        res.status(404).send({
-            statusCode: 404,
-            message: `Comment with id ${id} not found`
-        })
-    }
-
     try {
-        const deleteCommentById = await commentModel.findByIdAndDelete(id)
+
+        const commentExist = await CommentsModel.findById(id);
+
+        if(!commentExist){
+            return res.status(404).send({
+                statusCode: 404,
+                message: `Comment with id ${id} not found`
+            })
+        }
+
+        const deleteCommentById = await CommentsModel.findByIdAndDelete(id)
+        //const post = await PostsModel.findById(commentExist.post);
+
+        /*if (deleteCommentById.author !== req.user.id || post.author !== req.user.id) {
+            return res.status(403).send({
+              statusCode: 403,
+              message: "Permission denied"
+            });
+          }*/
 
         res.status(201).send({
             statusCode: 201,
@@ -134,12 +153,14 @@ comment.patch('/comments/update/:id', async (req, res) => {
     }
 
     try {
-        console.log(Object.keys(res.req))
+        console.log(commentExist)
         const dataToUpdate = req.body;
+        //const dataToUpdate = {content: 'test'}
         const options = {new: true}
+        console.log(dataToUpdate)
 
         const result = await CommentsModel.findByIdAndUpdate(id, dataToUpdate, options);
-        console.log(dataToUpdate)
+        console.log(result)
 
 
         res.status(202).send({

@@ -13,6 +13,21 @@ const crypto = require('crypto');
 
 const post = express.Router();
 
+cloudinary.config({ 
+    cloud_name: 'danz4sj8j', 
+    api_key: '478532613423114', 
+    api_secret: 'g7WJS-Q97F3SMCVAEyUJTd9X2Yk' 
+  });
+
+const cloudStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'progettoBlog',
+        format: async (req,file) => 'png',
+        public_id: (req, file) => file.name,
+    },
+})
+
 //come recuperare il nome del file
 const internalStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -28,6 +43,8 @@ const internalStorage = multer.diskStorage({
 // questo è un middleware che va messo nelle rotte dove carichiamo immagini
 const uploads = multer({storage: internalStorage});
 
+const cloudUpload = multer({storage: cloudStorage});
+
 //il contenuto di uploads.single('') dovrà sempre essere uguale al name dell'input
 post.post('/posts/uploadImg', uploads.single('cover'), async (req, res) =>{
     const url = req.protocol + "://" + req.get("host");
@@ -39,6 +56,15 @@ post.post('/posts/uploadImg', uploads.single('cover'), async (req, res) =>{
         res.status(500).json({ error: "File upload failed" });
     }
 });
+
+post.post('/posts/cloudUpload', cloudUpload.single('cover'), async (req,res)=> {
+    try {
+        res.status(200).json({cover: req.file.path})
+    } catch (error) {
+        console.error('File upload failed',error);
+        res.status(500).json({error: 'File upload failed'});
+    }
+})
 
 post.patch('/posts/:postId/updateImg', uploads.single('cover'), async (req, res) => {
     const url = req.protocol + "://" + req.get("host");
@@ -206,7 +232,7 @@ post.post('/posts/create', verifyToken, async (req, res) => {
     }
 })
 
-post.delete('/posts/:postId', async (req, res) => {
+post.delete('/posts/:postId', verifyToken, async (req, res) => {
     const { postId } = req.params;
 
     const postExist = await PostsModel.findById(postId);
@@ -218,8 +244,18 @@ post.delete('/posts/:postId', async (req, res) => {
         })
     }
 
+    const authorId = await AuthorsModel.findOne({_id: req.body.authorId});
+
+    if(!authorId){
+        return res.status(400).send({
+            statusCode: 400,
+            message:`Author with id ${authorId} not found`
+        })
+    }
+
     try {
         const deletePostById = await PostsModel.findByIdAndDelete(postId);
+        await AuthorsModel.updateOne({_id: authorId.id}, {$pull: {posts: deletePostById._id}});
 
         res.status(202).send({
             statusCode: 202,

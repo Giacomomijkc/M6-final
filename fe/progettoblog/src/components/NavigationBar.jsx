@@ -1,32 +1,52 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from "react-bootstrap/Button";
 import { Link } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import logoImage from '../assets/logo.png';
+import { useTheme } from './ThemeContext';
 import './NavigationBar.css';
 
-const NavigationBar = ({query, setQuery, showSearch}) => {
+const NavigationBar = ({query, setQuery, showSearch, userData, fetchUserDataAndPostDetails}) => {
+
+  const { toggleTheme, theme } = useTheme();
+  const themeButtonText = theme === 'dark' ? 'Light Mode' : 'Dark Mode'; 
+  const textColorClass = theme === 'dark' ? 'yellow' : 'violet';
+
+  const handleToggleTheme = () => {
+    toggleTheme();
+    console.log('Theme toggled:', theme); // Aggiungi questa riga
+  };
+
+  useEffect(() => {
+    if (fetchUserDataAndPostDetails) {
+      fetchUserDataAndPostDetails();
+    }
+  }, []);
 
   const handleLogOut = () => {
     localStorage.removeItem("userLoggedIn");
     // Inoltre, dopo il logout, esegui un reindirizzamento alla pagina di login
     window.location.href = "/";
-}
+  }
 
-  const isUserLoggedIn = localStorage.getItem("userLoggedIn");  
+
+  const isUserLoggedIn = localStorage.getItem("userLoggedIn"); 
 
     return(
-        <Navbar expand="lg" className="bg-body-tertiary" variant="light">
-        <Container fluid>
+        <Navbar expand="lg" className={`sticky bg-body-tertiary ${theme === 'dark' ? 'dark-theme' : ''}`} variant="light">
+        <Container className="fluid">
           <Link to={"/"}>
-            <Navbar.Brand href="#"><img src={logoImage} alt="Logo" className="logo"/></Navbar.Brand>
+            <Navbar.Brand ><img src={logoImage} alt="Logo" className="logo"/></Navbar.Brand>
           </Link>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
+            <Button className="mx-2" variant="info" onClick={handleToggleTheme}>
+              {themeButtonText}
+            </Button>
             {showSearch && (
-              <Form className="d-flex">
+              <Form className="d-flex mx-2">
               <Form.Control
                 type="search"
                 placeholder="Cerca un articolo"
@@ -50,7 +70,17 @@ const NavigationBar = ({query, setQuery, showSearch}) => {
               <Link to={"/dashboard"}>
                 <Button className="mx-2">Dashboard</Button>
               </Link>
-              <Button onClick={handleLogOut}>Log Out</Button>
+              <Button className="mx-2" onClick={handleLogOut}>Log Out</Button>
+              {userData && (
+                      <div className="ms-auto d-flex align-items-center">
+                      <div className="user-profile">
+                        <span>Hi, <span className={textColorClass}>{userData.name}</span></span>
+                        {userData.avatar && (
+                          <img src={userData.avatar} alt="User Avatar" className="avatar mx-2" />
+                        )}
+                      </div>
+                    </div>
+                        )}
             </>
           ) : (
             <>
@@ -59,7 +89,6 @@ const NavigationBar = ({query, setQuery, showSearch}) => {
             </Link>
             </>
           )}
-           
           </Navbar.Collapse>
         </Container>
       </Navbar>

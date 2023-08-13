@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import CardHeader from 'react-bootstrap/esm/CardHeader';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../components/ThemeContext';
 
 
 const AllAuthorPosts = ({query, setQuery}) => {
@@ -17,6 +18,7 @@ const AllAuthorPosts = ({query, setQuery}) => {
     const {authorId} = useParams();
     const [posts, setPosts] = useState([]);
     const [authorDetails, setAuthorDetails] = useState({});
+    const { theme, toggleTheme } = useTheme();
 
 
 
@@ -65,7 +67,7 @@ const AllAuthorPosts = ({query, setQuery}) => {
   return (
     <>
     <NavigationBar showSearch={true} query={query} setQuery={setQuery}/>
-    <Container className="fluid my-5 justify-content-center">
+    <Container className={`fluid my-5 justify-content-center ${theme === 'dark' ? 'dark-theme' : ''}`}>
         <Row>
             <Col className="col-md-12">
                 <div className='d-flex justify-content-center gap-1 flex-wrap my-5'>
@@ -74,7 +76,7 @@ const AllAuthorPosts = ({query, setQuery}) => {
             </Col>
         </Row>
     </Container>
-    <Container className="fluid my-5 justify-content-center">
+    <Container className={`fluid my-5 justify-content-center ${theme === 'dark' ? 'dark-theme' : ''}`}>
             <Row>
                 <Col className="col-md-12">
                     <div className='d-flex justify-content-center gap-2 flex-wrap'>
