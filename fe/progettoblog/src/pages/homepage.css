@@ -1,7 +1,14 @@
-.content-container {
+/*.content-container {
     margin: 0; 
     transition: margin 0.3s ease-in-out; 
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     overflow-y: hidden;
   }
+
+  .footer{
+    margin-top: auto;
+    height: 50px;
+  }*/
 

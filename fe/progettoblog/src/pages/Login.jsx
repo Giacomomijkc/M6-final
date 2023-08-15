@@ -17,6 +17,8 @@ const Login = () => {
     
     const { theme, toggleTheme } = useTheme();
     const [loginFormData, setLoginFormData] = useState({});
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     const [showCreateAuthorInput, setShowCreateAuthorInput] = useState(false);
@@ -32,6 +34,11 @@ const Login = () => {
     const onSubmit = async(e) =>{
         e.preventDefault();
 
+        if(!loginFormData.email || !loginFormData.password){
+          setErrorMessage('Please fill al the fields!');
+          return;
+        }
+
             try {
                 const response = await fetch(apiUrlLogin, {
                   method: "POST",
@@ -40,17 +47,26 @@ const Login = () => {
                   },
                   body: JSON.stringify(loginFormData),
                 });
-          
-                if (!response.ok) {
-                  throw new Error("Network response was not ok");
-                }
-          
+
                 const data = await response.json();
+          
+                if (response.ok) {
                 localStorage.setItem("userLoggedIn", JSON.stringify(data.token));
                 console.log('token salvato')
-                navigate('/dashboard');
+                setErrorMessage('')
+                setSuccessMessage('Log In succesfully completed!')
+                setTimeout(() => {
+                  navigate('/dashboard');
+                }, 2000);
+                }
+
+                else {
+                  setErrorMessage(data.message); // Imposta il messaggio di errore dal backend
+              }
+          
               } catch (error) {
                 console.error("Error occurred during login:", error);
+                setErrorMessage('Error occurred during login!')
               }
     };
 
@@ -95,15 +111,27 @@ const Login = () => {
                         variant="success"
                         >Login</Button>
                     </Form>
+                    {successMessage && (
+                        <div className="alert alert-success mt-3" role="alert">
+                            {successMessage}
+                        </div>
+                    )}
+                    {errorMessage && (
+                        <div className="alert alert-danger mt-3" role="alert">
+                            {errorMessage}
+                        </div>
+                    )}
                     <Button
                         onClick={handleLoginGitHub}
                         variant="success"
                         type="submit"
-                        >Login con GitHub</Button>
+                        className="mt-2 me-1"
+                        >Login con GitHub
+                    </Button>
                     <Button
                       variant="info"
                       onClick={handleShowCreateAuthorInput}
-                      className="mt-3"
+                      className="mt-2 ms-1"
                     >
                      Non sei registrato?
                     </Button>

@@ -144,7 +144,7 @@ const Dashboard = ({userData, postDetails, setPostDetails, fetchUserDataAndPostD
             </Col>
           </Row>
         </Container>
-        <Footer />
+        <Footer className='footer' />
          </div>
         </>
       );

@@ -19,9 +19,13 @@ const SingleAuthor = ({author}) => {
                     <img className='author-avatar' src={author.avatar} alt={`${author.name} ${author.surname}`} />
                 </td>
                 <td className={`${theme === 'dark' ? 'dark-theme' : ''}`}>
-                    <Link to={`/authors/${author._id}`} >
-                     <Button className='button' variant='success'>Go to Posts</Button>
+                {author.posts.length > 0 ? (
+                    <Link to={`/authors/${author._id}`}>
+                        <Button className='button' variant='success'>Go to Posts</Button>
                     </Link>
+                    ) : (
+                    'No posts availables'
+                    )}
                 </td>
             </tr>
     );

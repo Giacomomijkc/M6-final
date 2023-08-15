@@ -51,3 +51,20 @@
     font-style: italic;
 }
 
+.content-container {
+    margin: 0; 
+    transition: margin 0.3s ease-in-out; 
+    min-height: 100vh !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+.footer{
+    margin-top: auto !important;
+}
+
+ 
+
+
+
+

@@ -28,3 +28,24 @@
     color: rgba(226, 213, 31, 0.893);
     font-weight: bolder;
   }
+
+  @media (max-width: 991px) {
+    .button {
+      width: 100px !important;  
+      font-size: x-small !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .button {
+      width: 80px !important;  
+      font-size: xx-small !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .user {
+      width: 20px !important;  
+      font-size: x-small !important
+    }
+}

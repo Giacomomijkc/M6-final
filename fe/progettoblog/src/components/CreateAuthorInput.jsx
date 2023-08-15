@@ -44,7 +44,7 @@ const CreateAuthorInput = ({handleCloseCreateAuthorInput, showCreateAuthorInput}
     const submitForm = async(e) =>{
         e.preventDefault();
 
-        if(file){
+        if(file && formData){
             try {
                 const uploadedFile = await uploadFile(file);
                 const postFormData = {
@@ -66,7 +66,8 @@ const CreateAuthorInput = ({handleCloseCreateAuthorInput, showCreateAuthorInput}
                     setFormData({})
                     setFile('Nessun file selezionato')
                     coverInputRef.current.value = null;
-                    setSuccessMessage('Author succesfully sent!')
+                    setErrorMessage('')
+                    setSuccessMessage('Author succesfully created!')
                   }
             
                 return response.json();
@@ -75,8 +76,8 @@ const CreateAuthorInput = ({handleCloseCreateAuthorInput, showCreateAuthorInput}
                 setErrorMessage('Errors occured')
             }
         } else {
-            console.error('Please select at least 1 file to upload')
-            setErrorMessage('Please select at least 1 file to upload')
+            console.error('Please fill al the fields')
+            setErrorMessage('Please fill al the fields')
         }
     };
 

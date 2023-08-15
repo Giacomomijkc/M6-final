@@ -59,7 +59,7 @@ const CreatePostInput = ({getPosts, getAuthors, getComments}) => {
 
         const token = JSON.parse(localStorage.getItem("userLoggedIn"));
 
-        if(file){
+        if(file && formData){
             try {
                 const uploadedFile = await uploadFile(file);
                 const postFormData = {
@@ -82,7 +82,8 @@ const CreatePostInput = ({getPosts, getAuthors, getComments}) => {
                     setFormData({})
                     setFile('Nessun file selezionato')
                     coverInputRef.current.value = null;
-                    setSuccessMessage('Post succesfully sent!')
+                    setErrorMessage('')
+                    setSuccessMessage('Post succesfully cretaed!')
                     setTimeout(() => {
                         navigate('/');
                     }, 2000);
@@ -94,8 +95,8 @@ const CreatePostInput = ({getPosts, getAuthors, getComments}) => {
                 setErrorMessage('Errors occured')
             }
         } else {
-            console.error('Please select at least 1 file to upload')
-            setErrorMessage('Please select at least 1 file to upload')
+            console.error('Please fill al the fields')
+            setErrorMessage('Please fill al the fields')
         }
     };
 

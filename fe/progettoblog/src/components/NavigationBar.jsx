@@ -42,7 +42,7 @@ const NavigationBar = ({query, setQuery, showSearch, userData, fetchUserDataAndP
           </Link>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
-            <Button className="mx-2" variant="info" onClick={handleToggleTheme}>
+            <Button className="mx-2 button" variant="info" onClick={handleToggleTheme}>
               {themeButtonText}
             </Button>
             {showSearch && (
@@ -60,20 +60,20 @@ const NavigationBar = ({query, setQuery, showSearch, userData, fetchUserDataAndP
             </Form>
             )}
             <Link to={"/authors-page"}>
-              <Button className="mx-2">See all Authors</Button>
+              <Button className="mx-2 button">All Authors</Button>
             </Link>
             {isUserLoggedIn ? (
             <>
               <Link to={"/create-post"}>
-                <Button className="mx-2">Create Post</Button>
+                <Button className="mx-2 button">Create Post</Button>
               </Link>
               <Link to={"/dashboard"}>
-                <Button className="mx-2">Dashboard</Button>
+                <Button className="mx-2 button">Dashboard</Button>
               </Link>
-              <Button className="mx-2" onClick={handleLogOut}>Log Out</Button>
+              <Button className="mx-2 button" onClick={handleLogOut}>Log Out</Button>
               {userData && (
-                      <div className="ms-auto d-flex align-items-center">
-                      <div className="user-profile">
+                      <div className="user ms-auto d-flex align-items-center">
+                      <div className="user user-profile">
                         <span>Hi, <span className={textColorClass}>{userData.name}</span></span>
                         {userData.avatar && (
                           <img src={userData.avatar} alt="User Avatar" className="avatar mx-2" />
@@ -85,7 +85,7 @@ const NavigationBar = ({query, setQuery, showSearch, userData, fetchUserDataAndP
           ) : (
             <>
             <Link to={"/login"}>
-              <Button className="mx-2">Log In</Button>
+              <Button className="mx-2 button">Log In</Button>
             </Link>
             </>
           )}

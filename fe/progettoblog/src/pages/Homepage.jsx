@@ -14,7 +14,7 @@ export const Homepage = ({ posts, query, setQuery, authors, getPosts, getAuthors
     <div className={`content-container ${theme === 'dark' ? 'dark-theme' : ''}`}>
       <NavigationBar query={query} setQuery={setQuery} showSearch={true} userData={userData} />
       <AllPosts posts={posts} query={query} getPosts={getPosts} authors={authors} getAuthors={getAuthors} getComments={getComments} />
-      <Footer />
+      <Footer className='footer' />
     </div>
     </>
   )

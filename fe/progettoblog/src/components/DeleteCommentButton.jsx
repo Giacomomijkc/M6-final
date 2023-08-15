@@ -1,10 +1,8 @@
 import React, {useState} from 'react'
 import Button from 'react-bootstrap/Button';
 
-const DeleteCommentButton = ({commentId, handleRefreshPostComments }) => {
+const DeleteCommentButton = ({commentId, handleRefreshPostComments, setSuccessDeleteMessage, setErrorDeleteMessage }) => {
     
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
 
     const fetchDeleteComment = async (commentId) => {
 
@@ -30,26 +28,26 @@ const DeleteCommentButton = ({commentId, handleRefreshPostComments }) => {
     
                 if (response.ok) {
                     console.log('Sono nel ramo if response ok');
+                    setErrorDeleteMessage('')
                     setTimeout(() => {
-                        setSuccessMessage('Commento eliminato con successo!');
+                        setSuccessDeleteMessage('Commento eliminato con successo!');
                     }, 2000);
                     handleRefreshPostComments();
-                } else if (response.status === 500) {
-                    console.log('Errore del server interno:', response.status);
-                    // Gestisci l'errore 500 qui, ad esempio mostrando un messaggio all'utente
                 } else {
-                    console.log('Risposta non ok:', response.status);
-                    // Gestisci altri errori qui, ad esempio mostrando un messaggio all'utente
+                    const errorData = await response.json(); // Extract the error message
+                    console.log(errorData)
+                    setErrorDeleteMessage(errorData.message);
                 }
             }
     
         } catch (error) {
             console.log('Errore fetch:', error);
+            setErrorDeleteMessage('Errors occured')
         }
     
     }
   return (
-    <Button variant="danger" className='my-2' onClick={() => fetchDeleteComment(commentId)}>Delete Post</Button>
+    <Button variant="danger" className='my-2' onClick={() => fetchDeleteComment(commentId)}>Delete Comment</Button>
   )
 }
 

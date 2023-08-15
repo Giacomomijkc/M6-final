@@ -12,6 +12,7 @@ import Success from './pages/Success';
 import ProtectedRoutes from './middlewares/ProtectedRoutes';
 import AllAuthorPosts from './components/AllAuthorPosts';
 import { ThemeProvider } from './components/ThemeContext';
+import './App.css';
 const apiUrl = 'http://localhost:5050/posts';
 const authorsApiUrl = "http://localhost:5050/authors/";
 const commentsApiUrl = "http://localhost:5050/comments/";
@@ -119,6 +120,7 @@ const App = () => {
   return (
     <>
     <ThemeProvider>
+    <div className='app-container'>
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element={<Homepage 
@@ -138,12 +140,13 @@ const App = () => {
         </Route>
         <Route exact path="/create-author" element={<CreateAuthorPage getAuthors={getAuthors} />}/>
         <Route exact path="/authors-page" element={<AllAuthorsPage authors={authors} getAuthors={getAuthors} userData={userData}  />}/>
-        <Route exact path="/posts/:postId" element={<PostPage showSearch={false} authors={authors} getAuthors={getAuthors} comments={comments} userData={userData} />}/>
+        <Route exact path="/posts/:postId" element={<PostPage showSearch={false} authors={authors} getAuthors={getAuthors} comments={comments} userData={userData}  />}/>
         <Route exact path="/authors/:authorId" element={<AllAuthorPosts query={query} setQuery={setQuery} userData={userData}  />}/>
         <Route exact path="/success" element={<Success  />}/>
         <Route path="*" element={<ErrorPage showSearch={false} userData={userData} fetchUserDataAndPostDetails={fetchUserDataAndPostDetails}/>}/>
       </Routes>
     </BrowserRouter>
+    </div>
     </ThemeProvider>
     </>
   );

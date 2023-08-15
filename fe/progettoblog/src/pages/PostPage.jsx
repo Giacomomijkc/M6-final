@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 import { useTheme } from '../components/ThemeContext';
 const postsApiUrl = "http://localhost:5050/posts/";
 
-const PostPage = ({authors, getAuthors, comments}) => {
+const PostPage = ({authors, getAuthors, comments, userData}) => {
 
     const { theme, toggleTheme } = useTheme();
     const {postId} = useParams();
@@ -56,7 +56,7 @@ const PostPage = ({authors, getAuthors, comments}) => {
     return (
         <>
         <div className={`${theme === 'dark' ? 'dark-theme' : ''}`}>
-        <NavigationBar showSearch={false}/>
+        <NavigationBar showSearch={false} userData={userData}/>
         <PostLayout post={post} author={author} authors={authors} getAuthors={getAuthors} commentsPost = {commentsPost} setCommentsPost={setCommentsPost} handleRefreshPostComments={handleRefreshPostComments}/>
         <Footer />
         </div>

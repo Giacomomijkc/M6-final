@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -14,7 +14,9 @@ const EditCommentModal = ({commentId, handleIdCommentToEdit, handleRefreshPostCo
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [showCommentModal, setShowCommentModal] = useState(true);
-    
+
+    const [successDeleteMessage, setSuccessDeleteMessage] = useState('');
+    const [errorDeleteMessage, setErrorDeleteMessage] = useState('');
 
     const handleCloseEditCommentModal = () => {
         setShowCommentModal(false);
@@ -36,17 +38,21 @@ const EditCommentModal = ({commentId, handleIdCommentToEdit, handleRefreshPostCo
                 body: JSON.stringify(commentEditFormData),
             });
             console.log("Response status:", response.status);
+            console.log(token)
+            console.log(token._id)
            
             if (response.ok) {
                 console.log('sono nel if response ok')
                 setCommentEditFormData({})
+                setErrorMessage('')
                 setTimeout(() => {
                     setSuccessMessage('Comment succesfully edited!');
                 }, 2000);
                 handleRefreshPostComments();
+              } else {
+                const errorData = await response.json(); // Extract the error message
+                setErrorMessage(errorData.message);
               }
-        
-            return response.json();
             
         } catch (error) {
             console.error('Failed to edit Comment', error)
@@ -91,8 +97,18 @@ const EditCommentModal = ({commentId, handleIdCommentToEdit, handleRefreshPostCo
                                             type="submit"
                                             variant="success"
                                             >Edit Comment</Button>
-                                            <DeleteCommentButton commentId={commentId} handleRefreshPostComments={handleRefreshPostComments} />
+                                            <DeleteCommentButton commentId={commentId} handleRefreshPostComments={handleRefreshPostComments} setErrorDeleteMessage={setErrorDeleteMessage} setSuccessDeleteMessage={setSuccessDeleteMessage} />
                                         </Form>
+                                        {successDeleteMessage && (
+                                            <div className="alert alert-success mt-3" role="alert">
+                                                {successDeleteMessage}
+                                            </div>
+                                        )}
+                                        {errorDeleteMessage && (
+                                            <div className="alert alert-danger mt-3" role="alert">
+                                                {errorDeleteMessage}
+                                            </div>
+                                        )}
                                         {successMessage && (
                                             <div className="alert alert-success mt-3" role="alert">
                                                 {successMessage}
