@@ -116,11 +116,16 @@ comment.delete('/comments/:id', verifyToken, async (req,res) => {
             })
         }
 
-        const commentAuthorIdString = commentExist.author.toString(); // Trasforma ObjectId in stringa
-        console.log(typeof commentAuthorIdString);
-        console.log(typeof req.user._id);
+        const commentAuthorIdString = commentExist.author.toString(); 
+
+        const postIdFromComment = commentExist.post;
+        const post = await PostsModel.findById(postIdFromComment)
+        const postAuthorIdString = post.author.toString();
+        console.log(postAuthorIdString)
+        console.log(req.user._id)
+    
         
-        if (commentAuthorIdString !== req.user._id) {
+        if (commentAuthorIdString !== req.user._id && postAuthorIdString !== req.user._id) {
             return res.status(403).send({
                 statusCode: 403,
                 message: 'You are not authorized to delete this comment'
