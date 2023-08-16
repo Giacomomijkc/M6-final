@@ -132,6 +132,7 @@ const App = () => {
           getAuthors={getAuthors}
           getComments={getComments}
           userData ={userData}
+          fetchUserDataAndPostDetails = {fetchUserDataAndPostDetails}
           />} />
         <Route exact path="/login" element={<Login />}/>
         <Route element={<ProtectedRoutes />}>

@@ -9,6 +9,7 @@ const SinglePost = ({post, author}) => {
 
   const { theme, toggleTheme } = useTheme();
   const MAX_CONTENT_LENGTH = 100
+  const textColorClass = theme === 'dark' ? 'yellow' : 'violet';
 
   const truncatedContent = 
   post.content.length > MAX_CONTENT_LENGTH ? post.content.slice(0, MAX_CONTENT_LENGTH) + '...' 
@@ -32,7 +33,7 @@ const SinglePost = ({post, author}) => {
             <Card.Text className='vertical-alignment-center'>
               <Link className='link' to={`/authors/${author._id}`} >
                 <img src={author.avatar} alt="Author Avatar" className="avatar-class mx-2 my-2" />  
-                <span className="mx-2 my-2s">{`${author.name} ${author.surname}`}</span>
+                <span className={`x-2 my-2s ${textColorClass}`}>{`${author.name} ${author.surname}`}</span>
               </Link>
             </Card.Text>
           ) : (

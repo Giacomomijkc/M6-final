@@ -18,10 +18,10 @@ const SingleAuthor = ({author}) => {
                 <td className={`text ${theme === 'dark' ? 'dark-theme' : ''}`}>
                     <img className='author-avatar' src={author.avatar} alt={`${author.name} ${author.surname}`} />
                 </td>
-                <td className={`${theme === 'dark' ? 'dark-theme' : ''}`}>
+                <td className={`posts ${theme === 'dark' ? 'dark-theme' : ''}`}>
                 {author.posts.length > 0 ? (
                     <Link to={`/authors/${author._id}`}>
-                        <Button className='button' variant='success'>Go to Posts</Button>
+                        <Button className='button ' variant='success'>See Posts</Button>
                     </Link>
                     ) : (
                     'No posts availables'

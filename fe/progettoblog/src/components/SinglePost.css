@@ -28,5 +28,14 @@
 
 .link{
     text-decoration: none !important;
-    color: gray;
 }
+
+.violet{
+    color: blueviolet;
+    font-weight: bolder;
+}
+
+.yellow {
+    color: rgba(226, 213, 31, 0.893);
+    font-weight: bolder;
+  }
