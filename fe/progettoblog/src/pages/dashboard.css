@@ -45,7 +45,7 @@
 .yellow {
     color: rgba(226, 213, 31, 0.893);
     font-weight: bolder;
-  }
+}
 
 .post-content{
     font-style: italic;
@@ -60,7 +60,8 @@
   }
 
 .footer{
-    margin-top: auto !important;
+    height: 250px;
+    padding-top: 100px;
 }
 
  

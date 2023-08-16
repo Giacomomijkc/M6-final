@@ -19,6 +19,7 @@ const AllAuthorPosts = ({query, setQuery, userData}) => {
     const [posts, setPosts] = useState([]);
     const [authorDetails, setAuthorDetails] = useState({});
     const { theme, toggleTheme } = useTheme();
+    const textColorClass = theme === 'dark' ? 'yellow' : 'violet';
 
 
 
@@ -72,7 +73,7 @@ const AllAuthorPosts = ({query, setQuery, userData}) => {
         <Row>
             <Col className="col-md-12">
                 <div className='d-flex justify-content-center gap-1 flex-wrap my-5'>
-                    <h1 className='mx-2'>All <span className='violet'>{authorDetails.name}</span>'s articles</h1>
+                    <h1 className='mx-2'>All <span className={textColorClass}>{authorDetails.name}</span>'s articles</h1>
                 </div>
             </Col>
         </Row>

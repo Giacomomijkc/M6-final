@@ -93,7 +93,7 @@ const Dashboard = ({userData, postDetails, setPostDetails, fetchUserDataAndPostD
     
       return (
         <>
-         <div className={`${theme === 'dark' ? 'dark-theme' : ''}`}>
+         <div className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
          <NavigationBar showSearch={false} userData={userData} fetchUserDataAndPostDetails={fetchUserDataAndPostDetails}/>
         <Container className={`fluid justify-content-center ${theme === 'dark' ? 'dark-theme' : ''}`}>
           <Row >

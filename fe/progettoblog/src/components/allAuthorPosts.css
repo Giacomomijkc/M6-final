@@ -28,3 +28,8 @@
 .violet{
     color: blueviolet;
 }
+
+.yellow {
+    color: rgba(226, 213, 31, 0.893);
+    font-weight: bolder;
+}
