@@ -28,7 +28,7 @@ const EditAuthorModal = ({authorId, showEditAuthorModal, handleCloseEditAuthorMo
         fileData.append('avatar', image);
     
         try {
-            const response = await fetch(`${apiUrl}${authorId}/updateImg`, {
+            const response = await fetch(`${apiUrl}${authorId}/cloudUpdateImg`, {
                 method: "PATCH",
                 body: fileData,
             });
