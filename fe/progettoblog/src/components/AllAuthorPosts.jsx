@@ -56,7 +56,6 @@ const AllAuthorPosts = ({query, setQuery, userData}) => {
         }, [authorId])
 
     if (!posts || !posts.length) {
-        // Mostra un messaggio di caricamento o gestisci il caso in cui i dati non siano ancora disponibili
         return <div className='alert alert-info mt-5' role='alert'>Loading...</div>;
     }
 

@@ -15,7 +15,6 @@ const authorApiUrl = "http://localhost:5050/authors/create";
 
 const Success = () => {
   const { theme } = useTheme();
-  //const location = useLocation();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({

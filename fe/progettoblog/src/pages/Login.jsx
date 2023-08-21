@@ -61,7 +61,7 @@ const Login = () => {
                 }
 
                 else {
-                  setErrorMessage(data.message); // Imposta il messaggio di errore dal backend
+                  setErrorMessage(data.message); 
               }
           
               } catch (error) {

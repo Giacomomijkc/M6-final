@@ -13,7 +13,7 @@ import { useTheme } from '../components/ThemeContext';
 const apiUrlPosts = 'http://localhost:5050/posts';
 
 
-const Dashboard = ({userData, postDetails, setPostDetails, fetchUserDataAndPostDetails}) => {
+const Dashboard = () => {
 
       const { theme, toggleTheme } = useTheme();
       const MAX_CONTENT_LENGTH = 100
@@ -21,6 +21,8 @@ const Dashboard = ({userData, postDetails, setPostDetails, fetchUserDataAndPostD
 
       const [showEditAuthorModal, setShowEditAuthorModal] = useState(false);
       const [postIdToEdit, setPostIdToEdit] = useState(null);
+      const [userData, setUserData] = useState(null);
+      const [postDetails, setPostDetails] = useState([]);
 
 
       const handleShowEditAuthorModal = () => {
@@ -39,17 +41,69 @@ const Dashboard = ({userData, postDetails, setPostDetails, fetchUserDataAndPostD
       const handleIdPostToEdit = (postId) => {
         setPostIdToEdit(postId);
       };
-    
+
+
       useEffect(() => {        
         fetchUserDataAndPostDetails();
       }, []);
+      
+      const fetchUserDataAndPostDetails = async () => {
+        try {
+          const token = JSON.parse(localStorage.getItem("userLoggedIn"));
+          
+          if (!token) {
+            return <div className='alert alert-warning mt-5' role='alert'>Non autorizzato</div>;
+          }
+          
+          const response = await fetch('http://localhost:5050/dashboard', {
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": token
+              },
+          });
+
+          
+          if (!response.ok) {
+            return;
+          }
+          
+          const data = await response.json();
+          setUserData(data); 
+          console.log(data)
+      
+      
+          const posts = data.posts;
+      
+          if(!posts){
+            return <div className='alert alert-warning mt-5' role='alert'>Non ci sono posts</div>;
+          }
+      
+          const dataPosts = await Promise.all(
+            posts.map(async (postId) => {
+              const response = await fetch(`http://localhost:5050/posts/${postId}`);
+                    
+            if (!response.ok) {
+              throw new Error('Failed to fetch post details');
+            }
+                  
+            return response.json()
+            })
+          );
+                  
+          console.log('fine Post')
+          setPostDetails(dataPosts)
+                
+          } catch (error) {
+            console.error('Error occurred during fetching user data:', error);
+          }
+        };
 
       const handleRefreshPostsAndAuthors = () =>{
         fetchUserDataAndPostDetails();
       }
     
       if (!userData) {
-        // Mostra un messaggio di caricamento o gestisci il caso in cui i dati non siano ancora disponibili
         return <div className='alert alert-info mt-5' role='alert'>Loading...</div>;
       }
 
@@ -94,7 +148,7 @@ const Dashboard = ({userData, postDetails, setPostDetails, fetchUserDataAndPostD
       return (
         <>
          <div className={` ${theme === 'dark' ? 'dark-theme' : ''}`}>
-         <NavigationBar showSearch={false} userData={userData} fetchUserDataAndPostDetails={fetchUserDataAndPostDetails}/>
+         <NavigationBar showSearch={false} userData={userData} />
         <Container className={`fluid justify-content-center ${theme === 'dark' ? 'dark-theme' : ''}`}>
           <Row >
             <Col className='col-md-12'>

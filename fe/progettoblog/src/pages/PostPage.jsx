@@ -21,7 +21,6 @@ const PostPage = ({authors, getAuthors, comments, userData}) => {
             const response = await data.json();
             setPost(response.postById);
             setCommentsPost(response.postById.comments);
-            //console.log(commentsPost)
             console.log(response.postById);
         } catch (error) {
             console.log(error)
@@ -39,7 +38,7 @@ const PostPage = ({authors, getAuthors, comments, userData}) => {
     }
 
     useEffect(() => {
-        // Trova l'autore associato al post solo se il post ha un autore
+        // Trovo l'autore associato al post solo se il post ha un autore
         if (post.author) {
           const foundAuthor = authors.find((author) => author._id === post.author._id);
           setAuthor(foundAuthor);

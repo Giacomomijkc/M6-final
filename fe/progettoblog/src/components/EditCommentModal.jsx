@@ -50,7 +50,7 @@ const EditCommentModal = ({commentId, handleIdCommentToEdit, handleRefreshPostCo
                 }, 2000);
                 handleRefreshPostComments();
               } else {
-                const errorData = await response.json(); // Extract the error message
+                const errorData = await response.json(); 
                 setErrorMessage(errorData.message);
               }
             

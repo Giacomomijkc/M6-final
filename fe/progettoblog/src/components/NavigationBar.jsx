@@ -16,7 +16,7 @@ const NavigationBar = ({query, setQuery, showSearch, userData, fetchUserDataAndP
 
   const handleToggleTheme = () => {
     toggleTheme();
-    console.log('Theme toggled:', theme); // Aggiungi questa riga
+    console.log('Theme toggled:', theme); 
   };
 
   useEffect(() => {
@@ -27,7 +27,6 @@ const NavigationBar = ({query, setQuery, showSearch, userData, fetchUserDataAndP
 
   const handleLogOut = () => {
     localStorage.removeItem("userLoggedIn");
-    // Inoltre, dopo il logout, esegui un reindirizzamento alla pagina di login
     window.location.href = "/";
   }
 

@@ -27,19 +27,24 @@ const App = () => {
 
   const [userData, setUserData] = useState(null);
   const [postDetails, setPostDetails] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(3);
 
-  const getPosts = async() => {
+
+
+  const getPosts = async (page) => {
     try {
-      const data = await fetch(apiUrl);
+      const apiUrlWithPage = `http://localhost:5050/posts?page=${page}`;
+      const data = await fetch(apiUrlWithPage);
       const response = await data.json();
       console.log(response)
-      setPosts(response.posts);
-      console.log(posts)
-      
+      setPosts([...posts, ...response.posts]);
+      setTotalPages(Math.ceil(response.totalPosts / postsPerPage));
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
+
 
   const getAuthors = async () => {
     try {
@@ -64,15 +69,10 @@ const App = () => {
     }
   }
 
-  const fetchUserDataAndPostDetails = async () => {
+  const getUserData = async() => {
     try {
       const token = JSON.parse(localStorage.getItem("userLoggedIn"));
-      
-      if (!token) {
-        // Il token non è presente, gestire il caso in cui l'utente non sia autenticato
-        return <div className='alert alert-warning mt-5' role='alert'>Non autorizzato</div>;
-      }
-      
+
       const response = await fetch('http://localhost:5050/dashboard', {
           method: "GET",
           headers: {
@@ -80,42 +80,21 @@ const App = () => {
               "Authorization": token
           },
       });
-      
+
       if (!response.ok) {
-        // Gestisci il caso in cui la richiesta fallisca o l'utente non sia autorizzato
         return;
       }
       
       const data = await response.json();
-      setUserData(data); // Imposta i dati dell'utente nello stato locale
+      setUserData(data);
       console.log(data)
-  
-  
-      const posts = data.posts;
-  
-      if(!posts){
-        return <div className='alert alert-warning mt-5' role='alert'>Non ci sono posts</div>;
-      }
-  
-      const dataPosts = await Promise.all(
-        posts.map(async (postId) => {
-          const response = await fetch(`http://localhost:5050/posts/${postId}`);
-                
-        if (!response.ok) {
-          throw new Error('Failed to fetch post details');
-        }
-              
-        return response.json()
-        })
-      );
-              
-      console.log('fine Post')
-      setPostDetails(dataPosts)
-            
-      } catch (error) {
-        console.error('Error occurred during fetching user data:', error);
-      }
-    };
+
+    } catch (error) {
+      console.error('Error occurred during fetching user data:', error);
+    }
+
+  }
+
 
   return (
     <>
@@ -132,19 +111,21 @@ const App = () => {
           getAuthors={getAuthors}
           getComments={getComments}
           userData ={userData}
-          fetchUserDataAndPostDetails = {fetchUserDataAndPostDetails}
+          getUserData = {getUserData}
+          totalPages={totalPages}
+          postsPerPage ={postsPerPage}
           />} />
         <Route exact path="/login" element={<Login />}/>
         <Route element={<ProtectedRoutes />}>
           <Route exact path="/create-post" element={<CreatePostPage getPosts={getPosts} userData={userData} />} />
-          <Route exact path="/dashboard" element={<Dashboard setPostDetails={setPostDetails} userData={userData} postDetails={postDetails} fetchUserDataAndPostDetails={fetchUserDataAndPostDetails} />}/>
+          <Route exact path="/dashboard" element={<Dashboard setPostDetails={setPostDetails}  />}/>
         </Route>
         <Route exact path="/create-author" element={<CreateAuthorPage getAuthors={getAuthors} />}/>
         <Route exact path="/authors-page" element={<AllAuthorsPage authors={authors} getAuthors={getAuthors} userData={userData}  />}/>
         <Route exact path="/posts/:postId" element={<PostPage showSearch={false} authors={authors} getAuthors={getAuthors} comments={comments} userData={userData}  />}/>
-        <Route exact path="/authors/:authorId" element={<AllAuthorPosts query={query} setQuery={setQuery} userData={userData}  />}/>
+        <Route exact path="/authors/:authorId" element={<AllAuthorPosts query={query} setQuery={setQuery} userData={userData} />}/>
         <Route exact path="/success" element={<Success  />}/>
-        <Route path="*" element={<ErrorPage showSearch={false} userData={userData} fetchUserDataAndPostDetails={fetchUserDataAndPostDetails}/>}/>
+        <Route path="*" element={<ErrorPage showSearch={false} userData={userData}/>}/>
       </Routes>
     </BrowserRouter>
     </div>

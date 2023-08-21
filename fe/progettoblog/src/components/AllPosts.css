@@ -1,0 +1,25 @@
+.pagination-container {
+    position: relative;
+  }
+  
+  .pagination-slide-enter {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  
+  .pagination-slide-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 300ms, transform 300ms;
+  }
+  
+  .pagination-slide-exit {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .pagination-slide-exit-active {
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 300ms, transform 300ms;
+  }

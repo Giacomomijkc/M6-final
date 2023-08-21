@@ -1,4 +1,4 @@
-/*.app-container{
+.app-container{
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -7,5 +7,5 @@
 Footer{
   margin-top: auto;
   height: 50px;
-}*/
+}
 

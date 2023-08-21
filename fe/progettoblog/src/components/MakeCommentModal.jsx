@@ -52,7 +52,11 @@ const MakeCommentModal = ({postId, show, setShow, handleRefreshPostComments}) =>
                 handleRefreshPostComments()
               }
 
-              return response.json();
+              else {
+                const errorData = await response.json();
+                setErrorMessage(errorData.message);
+              }
+              
         } catch (error) {
             console.error('Failed to save Post', error)
             setTimeout(() => {

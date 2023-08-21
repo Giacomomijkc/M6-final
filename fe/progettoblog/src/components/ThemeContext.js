@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from 'react';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  console.log('Toggle Theme clicked'); // Aggiungi questa riga
+  console.log('Toggle Theme clicked'); 
   const [theme, setTheme] = useState('light');
 
   const toggleTheme = () => {

@@ -56,7 +56,6 @@ github.get('/auth/github/callback', passport.authenticate('github', {failureRedi
 );
 
 github.get('/success', (res,req)=> {
-    //cambiamo redirect quando ok
     res.redirect('http://localhost:3000/')
 })
 

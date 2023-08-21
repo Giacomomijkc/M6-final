@@ -5,17 +5,18 @@ import Footer from '../components/Footer';
 import './homepage.css'
 import { useTheme } from '../components/ThemeContext';
 
-export const Homepage = ({ posts, query, setQuery, authors, getPosts, getAuthors, getComments,userData, fetchUserDataAndPostDetails }) => {
+export const Homepage = ({ posts, query, setQuery, authors, getPosts, getAuthors, getComments, userData, getUserData, totalPages, postsPerPage }) => {
   const { theme } = useTheme();
 
+
   useEffect (() => {
-    fetchUserDataAndPostDetails();
-  })
+    getUserData();
+  },[])
   return (
     <>
     <div className={`content-container ${theme === 'dark' ? 'dark-theme' : ''}`}>
       <NavigationBar query={query} setQuery={setQuery} showSearch={true} userData={userData} />
-      <AllPosts posts={posts} query={query} getPosts={getPosts} authors={authors} getAuthors={getAuthors} getComments={getComments} />
+      <AllPosts posts={posts} query={query} getPosts={getPosts} authors={authors} getAuthors={getAuthors} getComments={getComments} totalPages={totalPages} postsPerPage ={postsPerPage} />
       <Footer className='footer' />
     </div>
     </>
